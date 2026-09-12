@@ -1,0 +1,284 @@
+{
+  "info": {
+    "_postman_id": "c35fbefb-5625-4630-ae57-3b23e3d6a9fa",
+    "name": "petstore_performance",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56096926",
+    "_collection_link": "https://go.postman.co/collection/56096926-c35fbefb-5625-4630-ae57-3b23e3d6a9fa?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Consultar Pets Disponiveis",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const pets = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Status code deve ser 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta deve ser um array\", function () {\r",
+              "    pm.expect(pets).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Deve retornar pelo menos um Pet\", function () {\r",
+              "    pm.expect(pets.length).to.be.greaterThan(0);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Tempo de resposta menor que 1000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+              "});\r",
+              "\r",
+              "// Salva automaticamente o primeiro ID encontrado\r",
+              "if (pets.length > 0) {\r",
+              "    pm.environment.set(\"petId\", pets[0].id);\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "[\r\n    {\r\n        \"id\": 35928647,\r\n        \"name\": \"regression-35928647\",\r\n        \"status\": \"available\"\r\n    }\r\n]",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://petstore3.swagger.io/api/v3/pet/findByStatus?status=available",
+          "protocol": "https",
+          "host": [
+            "petstore3",
+            "swagger",
+            "io"
+          ],
+          "path": [
+            "api",
+            "v3",
+            "pet",
+            "findByStatus"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "available"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar Pet por ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const pet = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Status code deve ser 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta deve ser JSON\", function () {\r",
+              "    pm.response.to.be.json;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Pet possui ID\", function () {\r",
+              "    pm.expect(pet.id).to.exist;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"ID do Pet é o mesmo utilizado na consulta\", function () {\r",
+              "    pm.expect(pet.id.toString()).to.eql(\r",
+              "        pm.environment.get(\"petId\").toString()\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Tempo de resposta menor que 1000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://petstore3.swagger.io/api/v3/pet/{{petId}}",
+          "protocol": "https",
+          "host": [
+            "petstore3",
+            "swagger",
+            "io"
+          ],
+          "path": [
+            "api",
+            "v3",
+            "pet",
+            "{{petId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Realizar Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code deve ser 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta não deve estar vazia\", function () {\r",
+              "    pm.expect(pm.response.text()).to.not.be.empty;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Tempo de resposta menor que 1000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://petstore3.swagger.io/api/v3/user/login?username=user1&password=password",
+          "protocol": "https",
+          "host": [
+            "petstore3",
+            "swagger",
+            "io"
+          ],
+          "path": [
+            "api",
+            "v3",
+            "user",
+            "login"
+          ],
+          "query": [
+            {
+              "key": "username",
+              "value": "user1"
+            },
+            {
+              "key": "password",
+              "value": "password"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar Inventario",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code deve ser 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta deve ser JSON\", function () {\r",
+              "    pm.response.to.be.json;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta não deve estar vazia\", function () {\r",
+              "    pm.expect(pm.response.text()).to.not.be.empty;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Tempo de resposta menor que 1000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://petstore3.swagger.io/api/v3/store/inventory",
+          "protocol": "https",
+          "host": [
+            "petstore3",
+            "swagger",
+            "io"
+          ],
+          "path": [
+            "api",
+            "v3",
+            "store",
+            "inventory"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
